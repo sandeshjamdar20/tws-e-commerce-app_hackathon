@@ -4,24 +4,27 @@ metadata:
   name: easyshop-ingress
   namespace: easyshop
   annotations:
+    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/group.name: easyshop-app-lb
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:609898225296:certificate/e9a77ee8-9fe8-404b-a3d1-867697322d8b
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/backend-protocol: HTTP
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'
-    alb.ingress.kubernetes.io/ssl-redirect: '443'
-    kubernetes.io/ingress.class: alb
-spec:
-  rules:
-  - host: jamdarwadi.shop
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: easyshop-service
-            port:
-              number: 80
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:609898225296:certificate/e9a77ee8-9fe8-404b-a3d1-867697322d8b
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/healthcheck-path: /
+    alb.ingress.kubernetes.io/success-codes: "200-399"
 
+spec:
+  ingressClassName: alb
+  rules:
+    - host: jamdarwadi.shop
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: easyshop-service
+                port:
+                  number: 80
